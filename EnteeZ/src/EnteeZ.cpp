@@ -8,5 +8,7 @@ EnteeZ::EnteeZ()
 
 Entity EnteeZ::CreateEntity()
 {
-	return Entity();
+	Entity entity(this, m_current_entity_count);
+	m_current_entity_count++;
+	return entity;
 }
