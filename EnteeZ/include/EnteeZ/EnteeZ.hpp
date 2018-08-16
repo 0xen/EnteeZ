@@ -3,6 +3,7 @@
 #include <functional>
 #include <typeindex>
 #include <map>
+#include <vector>
 
 namespace enteez
 {
@@ -12,10 +13,10 @@ namespace enteez
 	public:
 		EnteeZ();
 
-		EnteeZ::Entity CreateEntity();
+		EnteeZ::Entity* CreateEntity();
 
 		template<typename ...components>
-		void ForEach(typename lambda_function<std::function<void(Entity, components ...)>>::definition f);
+		void ForEach(typename lambda_function<std::function<void(components&...)>>::definition f);
 
 		friend class Entity;
 	private:
@@ -23,15 +24,21 @@ namespace enteez
 		unsigned int GetTypeIndex();
 
 		std::map<std::type_index, unsigned int> m_component_indexs;
+		std::vector<Entity*> m_entitys;
 		unsigned int m_registered_component_count = 0;
 		unsigned int m_current_entity_count = 0;
 	};
 
 
 	template<typename ...components>
-	inline void EnteeZ::ForEach(typename lambda_function<std::function<void(Entity, components ...)>>::definition f)
+	inline void EnteeZ::ForEach(typename lambda_function<std::function<void(components&...)>>::definition f)
 	{
-		//f(CreateEntity(),1);
+		for (auto entity : m_entitys)
+		{
+			//*(it.template component<Components>().get())
+			if (entity->HasComponent<components...>())
+				f(entity->GetComponent<components>()...);
+		}
 	}
 	template<typename T>
 	inline unsigned int EnteeZ::GetTypeIndex()

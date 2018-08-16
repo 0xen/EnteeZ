@@ -6,9 +6,10 @@ EnteeZ::EnteeZ()
 {
 }
 
-Entity EnteeZ::CreateEntity()
+Entity* EnteeZ::CreateEntity()
 {
-	Entity entity(this, m_current_entity_count);
+	Entity* entity = new Entity(this, m_current_entity_count);
+	m_entitys.push_back(entity);
 	m_current_entity_count++;
 	return entity;
 }

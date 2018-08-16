@@ -6,11 +6,15 @@ project(${project_name})
 set(common_headers
     include/EnteeZ/EnteeZ.hpp
     include/EnteeZ/Entity.hpp
+    include/EnteeZ/BaseComponentWrapper.hpp
+    include/EnteeZ/ComponentWrapper.hpp
 )
 
 set(common_source
     src/EnteeZ.cpp
     src/Entity.cpp
+    src/BaseComponentWrapper.cpp
+    src/ComponentWrapper.cpp
 )
 
 include_directories(include)
