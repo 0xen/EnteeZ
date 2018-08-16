@@ -13,7 +13,7 @@ namespace enteez
 	class Entity
 	{
 	public:
-		Entity(EnteeZ* entity_manager, unsigned int id);
+		Entity(EnteeZ* entity_manager);
 
 
 		template <typename T, typename ... Args>
@@ -28,10 +28,13 @@ namespace enteez
 		template<typename T, typename V, typename... components>
 		bool HasComponent();
 
+		EnteeZ& GetManager();
+
+		void Destroy();
+
 	private:
 		std::bitset<40> m_component_flags;
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
-		unsigned int m_id;
 		EnteeZ* m_entity_manager;
 	};
 	template<typename T, typename ...Args>

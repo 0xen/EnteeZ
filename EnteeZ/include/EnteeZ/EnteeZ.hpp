@@ -15,8 +15,10 @@ namespace enteez
 
 		EnteeZ::Entity* CreateEntity();
 
+		void DestroyEntity(Entity* entity);
+
 		template<typename ...components>
-		void ForEach(typename lambda_function<std::function<void(components&...)>>::definition f);
+		void ForEach(typename lambda_function<std::function<void(Entity* entity,components&...)>>::definition f);
 
 		friend class Entity;
 	private:
@@ -26,18 +28,16 @@ namespace enteez
 		std::map<std::type_index, unsigned int> m_component_indexs;
 		std::vector<Entity*> m_entitys;
 		unsigned int m_registered_component_count = 0;
-		unsigned int m_current_entity_count = 0;
 	};
 
 
 	template<typename ...components>
-	inline void EnteeZ::ForEach(typename lambda_function<std::function<void(components&...)>>::definition f)
+	inline void EnteeZ::ForEach(typename lambda_function<std::function<void(Entity* entity, components&...)>>::definition f)
 	{
 		for (auto entity : m_entitys)
 		{
-			//*(it.template component<Components>().get())
 			if (entity->HasComponent<components...>())
-				f(entity->GetComponent<components>()...);
+				f(entity,entity->GetComponent<components>()...);
 		}
 	}
 	template<typename T>

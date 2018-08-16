@@ -3,8 +3,17 @@
 
 using namespace enteez;
 
-Entity::Entity(EnteeZ* entity_manager, unsigned int id)
+Entity::Entity(EnteeZ* entity_manager)
 {
 	m_entity_manager = entity_manager;
-	m_id = id;
+}
+
+EnteeZ & enteez::Entity::GetManager()
+{
+	return *m_entity_manager;
+}
+
+void enteez::Entity::Destroy()
+{
+	m_entity_manager->DestroyEntity(this);
 }

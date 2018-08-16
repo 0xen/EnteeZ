@@ -21,31 +21,15 @@ void Test()
 
 struct Pos
 {
-
+	Pos() {}
+	Pos(float x, float y, float z) :x(x), y(y), z(z) {}
+	float x;
+	float y;
+	float z;
 };
-
-
-class A
-{
-
-};
-
-template <typename T>
-class B : public A
-{
-
-};
-
-A a;
 
 int main(int argc, char **argv)
 {
-	B<int> b;
-
-	a = b;
-
-	//B<int> c = reinterpret_cast<B<int>>(a);
-
 
 	enteez::EnteeZ ez;
 
@@ -53,15 +37,15 @@ int main(int argc, char **argv)
 
 	entity->AddComponent<TestComponent>(1, 2);
 
-	std::cout << entity->HasComponent<TestComponent>() << std::endl;
+	entity->Destroy();
 
-	ez.ForEach<TestComponent>([](TestComponent& a)
+	ez.ForEach<TestComponent>([](enteez::Entity* entity, TestComponent& a)
 	{
 		a.a = 10;
 		a.b = 20;
 	});
 
-	ez.ForEach<TestComponent>([](TestComponent& a)
+	ez.ForEach<TestComponent>([](enteez::Entity* entity, TestComponent& a)
 	{
 		std::cout << a.a << " " << a.b << std::endl;
 	});
