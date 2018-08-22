@@ -23,6 +23,9 @@ namespace enteez
 		T& GetComponent();
 
 		template <typename T>
+		void RemoveComponent();
+
+		template <typename T>
 		bool HasComponent();
 
 		template<typename T, typename V, typename... components>
@@ -54,6 +57,16 @@ namespace enteez
 		unsigned int type_index = m_entity_manager->GetTypeIndex<T>();
 		ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[type_index]);
 		return wrapper->Get();
+	}
+	template<typename T>
+	inline void Entity::RemoveComponent()
+	{
+		unsigned int type_index = m_entity_manager->GetTypeIndex<T>();
+		auto it = m_components.find(type_index);
+		if (it != m_components.end())
+		{
+			m_components.erase(it);
+		}
 	}
 	template<typename T>
 	inline bool Entity::HasComponent()
