@@ -8,7 +8,6 @@ set(src
 )
 
 set(headers
-    include/TestComponent.hpp
 )
 
 include_directories(include)

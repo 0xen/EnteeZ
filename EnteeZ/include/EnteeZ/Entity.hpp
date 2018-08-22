@@ -14,6 +14,7 @@ namespace enteez
 	{
 	public:
 		Entity(EnteeZ* entity_manager);
+		~Entity();
 
 
 		template <typename T, typename ... Args>

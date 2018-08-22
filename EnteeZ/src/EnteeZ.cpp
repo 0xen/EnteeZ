@@ -6,6 +6,15 @@ EnteeZ::EnteeZ()
 {
 }
 
+enteez::EnteeZ::~EnteeZ()
+{
+	for (auto e : m_entitys)
+	{
+		delete e;
+	}
+	m_entitys.clear();
+}
+
 Entity* EnteeZ::CreateEntity()
 {
 	Entity* entity = new Entity(this);

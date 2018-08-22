@@ -8,6 +8,15 @@ Entity::Entity(EnteeZ* entity_manager)
 	m_entity_manager = entity_manager;
 }
 
+enteez::Entity::~Entity()
+{
+	for (auto it = m_components.begin(); it != m_components.end(); it++)
+	{
+		delete it->second;
+	}
+	m_components.clear();
+}
+
 EnteeZ & enteez::Entity::GetManager()
 {
 	return *m_entity_manager;

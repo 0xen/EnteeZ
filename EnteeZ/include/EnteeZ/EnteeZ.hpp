@@ -12,6 +12,7 @@ namespace enteez
 	{
 	public:
 		EnteeZ();
+		~EnteeZ();
 
 		EnteeZ::Entity* CreateEntity();
 
