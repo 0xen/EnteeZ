@@ -12,26 +12,39 @@ struct Position
 };
 
 
+class Collidable
+{
+public:
+	Collidable() {}
+	Collidable(float rad) :rad(rad) {}
+	float rad;
+};
+
+
 int main(int argc, char **argv)
 {
 
 	enteez::EnteeZ ez;
 
-	std::vector<enteez::Entity*> entities;
+	enteez::EntityManager em = ez.GetEntityManager();
 
-	for (int i = 0; i < 10; i++)
+
+	for (int i = 0; i < 2; i++)
 	{
-		enteez::Entity* entity = ez.CreateEntity();
-
-		entity->AddComponent<Position>(12.0f * i, 22.0f * i);
-
-		entities.push_back(entity);
+		enteez::Entity* entity = em.CreateEntity();
+		entity->AddComponent<Position>();
+		entity->AddComponent<Collidable>(1.0f);
 	}
+	
 
-	ez.ForEach<Position>([](enteez::Entity* entity, Position& a)
+
+	em.ForEach<Position>([](enteez::Entity* entity, Position& pos)
 	{
-		std::cout << a.x << " " << a.y << std::endl;
+
 	});
+
+
+
 
     return 0;
 }

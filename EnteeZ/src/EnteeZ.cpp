@@ -2,32 +2,16 @@
 
 using namespace enteez;
 
-EnteeZ::EnteeZ()
+EnteeZ::EnteeZ() : m_entity_manager(this)
 {
+
 }
 
 enteez::EnteeZ::~EnteeZ()
 {
-	for (auto e : m_entitys)
-	{
-		delete e;
-	}
-	m_entitys.clear();
 }
 
-Entity* EnteeZ::CreateEntity()
+EntityManager & enteez::EnteeZ::GetEntityManager()
 {
-	Entity* entity = new Entity(this);
-	m_entitys.push_back(entity);
-	return entity;
-}
-
-void enteez::EnteeZ::DestroyEntity(Entity * entity)
-{
-	auto it = std::find(m_entitys.begin(), m_entitys.end(), entity);
-	if (it != m_entitys.end())
-	{
-		m_entitys.erase(it);
-	}
-	delete entity;
+	return m_entity_manager;
 }

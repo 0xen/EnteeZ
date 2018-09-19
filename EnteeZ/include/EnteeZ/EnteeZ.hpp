@@ -1,55 +1,35 @@
 #pragma once
-#include <EnteeZ/Entity.hpp>
-#include <functional>
+#include <EnteeZ/EntityManager.hpp>
 #include <typeindex>
 #include <map>
-#include <vector>
 
 namespace enteez
 {
-	template <typename T> struct lambda_function { typedef T definition; };
 	class EnteeZ
 	{
 	public:
 		EnteeZ();
 		~EnteeZ();
 
-		EnteeZ::Entity* CreateEntity();
+		EntityManager& GetEntityManager();
 
-		void DestroyEntity(Entity* entity);
 
-		template<typename ...components>
-		void ForEach(typename lambda_function<std::function<void(Entity* entity,components&...)>>::definition f);
-
-		friend class Entity;
+		friend class EntityManager;
 	private:
 		template<typename T>
-		unsigned int GetTypeIndex();
+		unsigned int GetIndex(std::map<std::type_index, unsigned int>& map);
 
-		std::map<std::type_index, unsigned int> m_component_indexs;
-		std::vector<Entity*> m_entitys;
-		unsigned int m_registered_component_count = 0;
+		EntityManager m_entity_manager;
 	};
 
-
-	template<typename ...components>
-	inline void EnteeZ::ForEach(typename lambda_function<std::function<void(Entity* entity, components&...)>>::definition f)
-	{
-		for (auto entity : m_entitys)
-		{
-			if (entity->HasComponent<components...>())
-				f(entity,entity->GetComponent<components>()...);
-		}
-	}
 	template<typename T>
-	inline unsigned int EnteeZ::GetTypeIndex()
+	inline unsigned int EnteeZ::GetIndex(std::map<std::type_index, unsigned int>& map)
 	{
-		auto found = m_component_indexs.find(std::type_index(typeid(T)));
-		if (found == m_component_indexs.end())
+		auto found = map.find(std::type_index(typeid(T)));
+		if (found == map.end())
 		{
-			m_component_indexs[std::type_index(typeid(T))] = m_registered_component_count;
-			m_registered_component_count++;
+			map[std::type_index(typeid(T))] = map.size();
 		}
-		return m_component_indexs[std::type_index(typeid(T))];
+		return map[std::type_index(typeid(T))];
 	}
 }

@@ -8,6 +8,7 @@ set(common_headers
     include/EnteeZ/Entity.hpp
     include/EnteeZ/BaseComponentWrapper.hpp
     include/EnteeZ/ComponentWrapper.hpp
+    include/EnteeZ/EntityManager.hpp
 )
 
 set(common_source
@@ -15,6 +16,7 @@ set(common_source
     src/Entity.cpp
     src/BaseComponentWrapper.cpp
     src/ComponentWrapper.cpp
+    src/EntityManager.cpp
 )
 
 include_directories(include)

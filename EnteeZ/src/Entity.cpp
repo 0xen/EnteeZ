@@ -3,7 +3,7 @@
 
 using namespace enteez;
 
-Entity::Entity(EnteeZ* entity_manager)
+Entity::Entity(EntityManager* entity_manager)
 {
 	m_entity_manager = entity_manager;
 }
@@ -17,7 +17,7 @@ enteez::Entity::~Entity()
 	m_components.clear();
 }
 
-EnteeZ & enteez::Entity::GetManager()
+EntityManager & enteez::Entity::GetManager()
 {
 	return *m_entity_manager;
 }
