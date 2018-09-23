@@ -29,10 +29,13 @@ namespace enteez
 
 		friend class Entity;
 	private:
+
 		EnteeZ * m_enteez;
 		std::map<std::type_index, unsigned int> m_component_indexs;
 		std::vector<Entity*> m_entitys;
+		std::map<std::bitset<10>, std::vector<Entity*>> m_cache;
 	};
+
 	template<typename T>
 	inline unsigned int EntityManager::GetComponentIndex()
 	{
@@ -42,6 +45,10 @@ namespace enteez
 	template<typename ...components>
 	inline void EntityManager::ForEach(typename lambda_function<std::function<void(Entity* entity, components&...)>>::definition f, bool cache)
 	{
+		if (cache)
+		{
+
+		}
 		for (auto entity : m_entitys)
 		{
 			if (entity->HasComponent<components...>())

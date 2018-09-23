@@ -5,6 +5,7 @@
 #include <map>
 
 #include <EnteeZ/ComponentWrapper.hpp>
+#include <EnteeZ/BitHandler.hpp>
 
 namespace enteez
 {

@@ -24,25 +24,26 @@ public:
 int main(int argc, char **argv)
 {
 
+	enteez::BitHandler bh1;
+
+
+
+
 	enteez::EnteeZ ez;
 
 	enteez::EntityManager em = ez.GetEntityManager();
 
 
-	for (int i = 0; i < 2; i++)
-	{
-		enteez::Entity* entity = em.CreateEntity();
-		entity->AddComponent<Position>();
-		entity->AddComponent<Collidable>(1.0f);
-	}
-	
+	enteez::Entity* entity = em.CreateEntity();
+	entity->AddComponent<Position>();
+	entity->AddComponent<Collidable>(1.0f);
+
 
 
 	em.ForEach<Position>([](enteez::Entity* entity, Position& pos)
 	{
 
 	});
-
 
 
 
