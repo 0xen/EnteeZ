@@ -13,6 +13,7 @@ enteez::EntityManager::~EntityManager()
 		delete e;
 	}
 	m_entitys.clear();
+
 }
 
 

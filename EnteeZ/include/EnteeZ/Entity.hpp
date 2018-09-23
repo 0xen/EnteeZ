@@ -1,11 +1,10 @@
 #pragma once
 #include <iostream>
 #include <type_traits>
-#include <bitset>
 #include <map>
 
 #include <EnteeZ/ComponentWrapper.hpp>
-#include <EnteeZ/BitHandler.hpp>
+#include <bitset>
 
 namespace enteez
 {
@@ -38,7 +37,7 @@ namespace enteez
 		void Destroy();
 
 	private:
-		std::bitset<40> m_component_flags;
+		std::bitset<100> m_component_flags;
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
 		EntityManager* m_entity_manager;
 	};

@@ -9,7 +9,6 @@ set(common_headers
     include/EnteeZ/BaseComponentWrapper.hpp
     include/EnteeZ/ComponentWrapper.hpp
     include/EnteeZ/EntityManager.hpp
-    include/EnteeZ/BitHandler.hpp
 )
 
 set(common_source
@@ -18,7 +17,6 @@ set(common_source
     src/BaseComponentWrapper.cpp
     src/ComponentWrapper.cpp
     src/EntityManager.cpp
-    src/BitHandler.cpp
 )
 
 include_directories(include)
