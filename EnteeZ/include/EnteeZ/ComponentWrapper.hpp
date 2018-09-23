@@ -13,21 +13,20 @@ namespace enteez
 	{
 	public:
 		ComponentWrapper() {}
-		ComponentWrapper(T component);
+		ComponentWrapper(T* component);
 
 		T& Get();
 
 	private:
-		T m_component;
 	};
 	template<typename T>
-	inline ComponentWrapper<T>::ComponentWrapper(T  component)
+	inline ComponentWrapper<T>::ComponentWrapper(T* component)
 	{
 		m_component = component;
 	}
 	template<typename T>
 	inline T& ComponentWrapper<T>::Get()
 	{
-		return m_component;
+		return *static_cast<T*>(m_component);
 	}
 }

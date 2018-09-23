@@ -21,35 +21,90 @@ public:
 };
 
 
+class MsgSend
+{
+public:
+	MsgSend() {}
+	void Send()
+	{
+		//std::cout << "Send " << a << std::endl;
+	}
+
+private:
+
+};
+
+template<typename T>
+class MsgRecive
+{
+public:
+
+	void ReciveMessage(T message)
+	{
+		std::cout << "ReciveMessage" << std::endl;
+	}
+
+private:
+
+};
+
+class ComponentA : public MsgSend, public MsgRecive<int>
+{
+public:
+	ComponentA() {}
+
+	char a;
+private:
+
+};
+
+class ComponentB : public MsgRecive<int>, public MsgSend
+{
+public:
+	ComponentB() {}
+private:
+
+};
+
+
 int main(int argc, char **argv)
 {
-
+	ComponentA a;
+	std::cout << sizeof(a) << std::endl;
 	enteez::EnteeZ ez;
+	ez.RegisterBase<ComponentA, MsgSend, MsgRecive<int>>();
+	ez.RegisterBase<ComponentB, MsgSend, MsgRecive<int>>();
 
 	enteez::EntityManager em = ez.GetEntityManager();
 
-	for (int i = 0; i < 10000; i++)
-	{
-		enteez::Entity* entity = em.CreateEntity();
-		entity->AddComponent<Position>();
-		entity->AddComponent<Collidable>(1.0f);
-	}
-	for (int i = 0; i < 10000; i++)
-	{
-		enteez::Entity* entity = em.CreateEntity();
-		entity->AddComponent<Position>();
-	}
+	enteez::Entity* entity = em.CreateEntity();
+	entity->AddComponent<Position>();
+	entity->AddComponent<ComponentA>();
+	entity->AddComponent<ComponentB>();
+	
 
-	em.ForEach<Position, Collidable>([](enteez::Entity* entity, Position& pos, Collidable& coll)
+	entity->ForEach<MsgSend>([](enteez::Entity* entity, MsgSend* send)
 	{
-		//std::cout << "Heya" << std::endl;
+		send->Send();
+	});
+
+	entity->ForEach<MsgRecive<int>>([](enteez::Entity* entity, MsgRecive<int>* recive)
+	{
+		int a = 1;
+		recive->ReciveMessage(a);
+	});
+	
+
+	em.ForEach<Position>([](enteez::Entity* entity, Position& pos)
+	{
+		//entity->AddComponent<Collidable>(1.0f);
 	}, true);
 
 	em.ForEach<Position, Collidable>([](enteez::Entity* entity, Position& pos, Collidable& coll)
 	{
-		//std::cout << "Heya" << std::endl;
+		std::cout << "Heya" << std::endl;
 	}, true);
-
+	
 
 
     return 0;

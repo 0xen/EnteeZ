@@ -8,7 +8,6 @@
 
 namespace enteez
 {
-	template <typename T> struct lambda_function { typedef T definition; };
 	class EnteeZ;
 	class EntityManager
 	{
@@ -28,6 +27,13 @@ namespace enteez
 		template<typename T>
 		unsigned int GetComponentIndex();
 
+		template<typename T>
+		unsigned int GetBaseIndex();
+
+		// return all components with base type T
+		template<typename T>
+		std::vector<unsigned int> GetBaseComponents();
+
 		friend class Entity;
 	private:
 
@@ -37,7 +43,6 @@ namespace enteez
 		void AddToBitHandler(std::bitset<100>& bs);
 
 		EnteeZ * m_enteez;
-		std::map<std::type_index, unsigned int> m_component_indexs;
 		std::vector<Entity*> m_entitys;
 		std::map<unsigned long long, std::vector<Entity*>> m_cache;
 	};
@@ -45,7 +50,13 @@ namespace enteez
 	template<typename T>
 	inline unsigned int EntityManager::GetComponentIndex()
 	{
-		return m_enteez->GetIndex<T>(m_component_indexs);
+		return m_enteez->GetIndex<T>(m_enteez->m_component_indexs);
+	}
+
+	template<typename T>
+	unsigned int EntityManager::GetBaseIndex()
+	{
+		return m_enteez->GetIndex<T>(m_enteez->m_base_indexs);
 	}
 
 	template<typename ...components>
@@ -102,6 +113,13 @@ namespace enteez
 				responce.push_back(entity);
 		}
 		return responce;
+	}
+
+	template<typename T>
+	std::vector<unsigned int> EntityManager::GetBaseComponents()
+	{
+		unsigned int base_index = GetBaseIndex<T>();
+		return m_enteez->m_component_bases[base_index];
 	}
 
 	template<typename T>

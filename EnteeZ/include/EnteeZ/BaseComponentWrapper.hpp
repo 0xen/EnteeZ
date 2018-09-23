@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <type_traits>
-#include <bitset>
 
 namespace enteez
 {
@@ -9,5 +6,7 @@ namespace enteez
 	{
 	public:
 		BaseComponentWrapper() {}
+	protected:
+		void* m_component;
 	};
 }

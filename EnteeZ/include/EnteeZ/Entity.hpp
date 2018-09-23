@@ -1,15 +1,18 @@
 #pragma once
 #include <iostream>
 #include <type_traits>
+#include <functional>
 #include <map>
+#include <vector>
+#include <bitset>
+#include <typeindex>
 
 #include <EnteeZ/ComponentWrapper.hpp>
-#include <bitset>
 
 namespace enteez
 {
 	class EntityManager;
-
+	template <typename T> struct lambda_function { typedef T definition; };
 	class Entity
 	{
 	public:
@@ -32,6 +35,9 @@ namespace enteez
 		template<typename T, typename V, typename... components>
 		bool HasComponent();
 
+		template<typename T>
+		void ForEach(typename lambda_function<std::function<void(Entity* entity, T* t)>>::definition f);
+
 		EntityManager& GetManager();
 
 		void Destroy();
@@ -41,10 +47,11 @@ namespace enteez
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
 		EntityManager* m_entity_manager;
 	};
+
 	template<typename T, typename ...Args>
 	inline ComponentWrapper<T>* Entity::AddComponent(Args && ...args)
 	{
-		T t(std::forward<Args>(args) ...);
+		T* t = new T(std::forward<Args>(args) ...);
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
 		m_component_flags.set(index);
 
@@ -60,6 +67,7 @@ namespace enteez
 		ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[type_index]);
 		return wrapper->Get();
 	}
+
 	template<typename T>
 	inline void Entity::RemoveComponent()
 	{
@@ -70,6 +78,7 @@ namespace enteez
 			m_components.erase(it);
 		}
 	}
+
 	template<typename T>
 	inline bool Entity::HasComponent()
 	{
@@ -81,5 +90,19 @@ namespace enteez
 	inline bool Entity::HasComponent()
 	{
 		return HasComponent<T>() && HasComponent<V, components...>();
+	}
+
+	template<typename T>
+	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, T* t)>>::definition f)
+	{
+		std::vector<unsigned int> component_bases = m_entity_manager->GetBaseComponents<T>();
+		for (auto base : component_bases)
+		{
+			if (m_component_flags.test(base))
+			{
+				ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[base]);
+				f(this, &wrapper->Get());
+			}
+		}
 	}
 }
