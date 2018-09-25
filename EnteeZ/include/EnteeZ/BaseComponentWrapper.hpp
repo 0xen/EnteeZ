@@ -6,6 +6,7 @@ namespace enteez
 	{
 	public:
 		BaseComponentWrapper() {}
+		void* GetComponentPtr();
 	protected:
 		void* m_component;
 	};

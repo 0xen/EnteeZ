@@ -36,7 +36,7 @@ namespace enteez
 		bool HasComponent();
 
 		template<typename T>
-		void ForEach(typename lambda_function<std::function<void(Entity* entity, T* t)>>::definition f);
+		void ForEach(typename lambda_function<std::function<void(Entity* entity, T& t)>>::definition f);
 
 		EntityManager& GetManager();
 
@@ -93,15 +93,27 @@ namespace enteez
 	}
 
 	template<typename T>
-	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, T* t)>>::definition f)
+	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, T& t)>>::definition f)
 	{
 		std::vector<unsigned int> component_bases = m_entity_manager->GetBaseComponents<T>();
 		for (auto base : component_bases)
 		{
 			if (m_component_flags.test(base))
 			{
-				ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[base]);
-				f(this, &wrapper->Get());
+
+
+
+
+				//ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[base]);
+
+				//f(this, &wrapper->Get());
+
+				TemplateBase* tb = m_entity_manager->GetTemplateBase<T>();
+
+				TemplateStorage<T>& ts = static_cast<TemplateStorage<T>&>(*tb);
+				T& t = ts.Get(m_components[base]->GetComponentPtr());
+
+				f(this, t);
 			}
 		}
 	}

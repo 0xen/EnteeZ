@@ -9,7 +9,9 @@ set(common_headers
     include/EnteeZ/BaseComponentWrapper.hpp
     include/EnteeZ/ComponentWrapper.hpp
     include/EnteeZ/EntityManager.hpp
-    include/EnteeZ/Bases.hpp
+    include/EnteeZ/TemplateBase.hpp
+    include/EnteeZ/TemplateStorage.hpp
+    include/EnteeZ/TemplatePair.hpp
 )
 
 set(common_source
@@ -18,7 +20,9 @@ set(common_source
     src/BaseComponentWrapper.cpp
     src/ComponentWrapper.cpp
     src/EntityManager.cpp
-    src/Bases.cpp
+    src/TemplateBase.cpp
+    src/TemplateStorage.cpp
+    src/TemplatePair.cpp
 )
 
 include_directories(include)

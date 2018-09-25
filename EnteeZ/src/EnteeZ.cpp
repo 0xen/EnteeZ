@@ -9,6 +9,7 @@ EnteeZ::EnteeZ() : m_entity_manager(this)
 
 enteez::EnteeZ::~EnteeZ()
 {
+
 }
 
 EntityManager & enteez::EnteeZ::GetEntityManager()

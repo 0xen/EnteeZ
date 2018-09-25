@@ -1,6 +1,6 @@
 #pragma once
-#include <EnteeZ/Bases.hpp>
 #include <EnteeZ/EntityManager.hpp>
+#include <EnteeZ\TemplatePair.hpp>
 #include <typeindex>
 #include <map>
 #include <vector>
@@ -30,6 +30,7 @@ namespace enteez
 		std::map<std::type_index, unsigned int> m_component_indexs;
 
 		std::map<unsigned int, std::vector<unsigned int>> m_component_bases;
+		std::map<unsigned int, TemplateBase*> m_component_base_templates;
 
 		EntityManager m_entity_manager;
 	};
@@ -39,6 +40,7 @@ namespace enteez
 	{
 		unsigned int component_index = GetIndex<T>(m_component_indexs);
 		unsigned int base_index = GetIndex<V>(m_base_indexs);
+		m_component_base_templates[base_index] = new TemplatePair<T, V>();
 		auto it = std::find(m_component_bases[base_index].begin(), m_component_bases[base_index].end(), component_index);
 		if (it == m_component_bases[base_index].end())
 		{
@@ -60,7 +62,8 @@ namespace enteez
 		if (found == map.end())
 		{
 			map[std::type_index(typeid(T))] = map.size();
+			return map.size() - 1;
 		}
-		return map[std::type_index(typeid(T))];
+		return found->second;
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <EnteeZ/Entity.hpp>
+#include <EnteeZ/TemplatePair.hpp>
 #include <functional>
 #include <typeindex>
 #include <vector>
@@ -33,6 +34,9 @@ namespace enteez
 		// return all components with base type T
 		template<typename T>
 		std::vector<unsigned int> GetBaseComponents();
+
+		template<typename T>
+		TemplateBase* GetTemplateBase();
 
 		friend class Entity;
 	private:
@@ -120,6 +124,13 @@ namespace enteez
 	{
 		unsigned int base_index = GetBaseIndex<T>();
 		return m_enteez->m_component_bases[base_index];
+	}
+
+	template<typename T>
+	inline TemplateBase* EntityManager::GetTemplateBase()
+	{
+		unsigned int base_index = GetBaseIndex<T>();
+		return m_enteez->m_component_base_templates[base_index];
 	}
 
 	template<typename T>
