@@ -4,6 +4,7 @@ namespace enteez
 {
 	class TemplateBase
 	{
-		int a = 200;
+	public:
+		virtual ~TemplateBase() {}
 	};
 }

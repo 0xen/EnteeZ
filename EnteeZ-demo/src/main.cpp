@@ -112,12 +112,17 @@ int main(int argc, char **argv)
 	entity->AddComponent<Position>(1.2f,1.3f);
 	entity->AddComponent<ComponentA>();
 	entity->AddComponent<ComponentB>();
-	
+
 
 	entity->ForEach<MsgRecive<int>>([](enteez::Entity* entity, MsgRecive<int>& send)
 	{
 		send.ReciveMessage(2);
 		std::cout << send.a << std::endl;
+	});
+
+	entity->ForEach<MsgSend>([](enteez::Entity* entity, MsgSend& send)
+	{
+		send.Send();
 	});
 	
 
