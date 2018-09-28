@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 	ez.RegisterBase<ComponentA, MsgSend, MsgRecive<int>>();
 	ez.RegisterBase<ComponentB, MsgSend, MsgRecive<int>>();
 
-	enteez::EntityManager em = ez.GetEntityManager();
+	enteez::EntityManager& em = ez.GetEntityManager();
 
 
 	for (unsigned int i = 0; i < 10; i++)
