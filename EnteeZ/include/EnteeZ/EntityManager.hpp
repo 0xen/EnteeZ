@@ -85,6 +85,9 @@ namespace enteez
 				}
 				return;
 			}
+			// Init the cache
+			m_cache[bs.to_ullong()] = std::vector<Entity*>();
+
 			// Since we do not have a cache available for this search, we need to loop through all entity's and create a cache
 			for (auto entity : m_entitys)
 			{

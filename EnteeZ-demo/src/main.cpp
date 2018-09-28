@@ -86,6 +86,12 @@ int main(int argc, char **argv)
 	enteez::EntityManager& em = ez.GetEntityManager();
 
 
+	em.ForEach<ComponentA>([](enteez::Entity* entity, ComponentA& caomponent_a)
+	{
+
+	}, true);
+
+
 	for (unsigned int i = 0; i < 10; i++)
 	{
 		enteez::Entity* entity = em.CreateEntity();
@@ -93,10 +99,22 @@ int main(int argc, char **argv)
 		entity->AddComponent<ComponentA>(entity);
 		entity->AddComponent<ComponentB>(entity);
 
+		entity->RemoveComponent<ComponentA>();
 	}
+
 	em.ForEach<ComponentA>([](enteez::Entity* entity, ComponentA& caomponent_a)
 	{
-		caomponent_a.Update();
+		std::cout << "a" << std::endl;
+	}, true);
+
+	for (auto& entity : em.GetEntitysWith<ComponentA>())
+	{
+		entity->Destroy();
+	}
+
+	em.ForEach<ComponentA>([](enteez::Entity* entity, ComponentA& caomponent_a)
+	{
+		std::cout << "b" << std::endl;
 	}, true);
 
 	

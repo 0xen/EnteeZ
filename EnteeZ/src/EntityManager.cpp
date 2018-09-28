@@ -31,5 +31,16 @@ void enteez::EntityManager::DestroyEntity(Entity * entity)
 	{
 		m_entitys.erase(it);
 	}
+	// Remove the entity from the cache
+	for (auto& it = m_cache.begin(); it != m_cache.end(); it++)
+	{
+		// Search for the entity
+		auto& search = std::find(it->second.begin(), it->second.end(), entity);
+		// If the item was found, remove the entity
+		if (search != it->second.end())
+		{
+			it->second.erase(search);
+		}
+	}
 	delete entity;
 }

@@ -57,6 +57,20 @@ namespace enteez
 
 		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t);
 		m_components[index] = wrapper;
+
+		// Update cache's
+		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+		{
+			//std::bitset<100>(it->first);
+			std::bitset<100> components(it->first);
+			if ((m_component_flags & components) == components)
+			{
+				if (std::find(it->second.begin(), it->second.end(), this) == it->second.end())
+				{
+					it->second.push_back(this);
+				}
+			}
+		}
 		return wrapper;
 	}
 
@@ -71,11 +85,30 @@ namespace enteez
 	template<typename T>
 	inline void Entity::RemoveComponent()
 	{
+		std::bitset<100> last_flags = m_component_flags;
 		unsigned int type_index = m_entity_manager->GetComponentIndex<T>();
+		m_component_flags.set(type_index, false);
 		auto it = m_components.find(type_index);
 		if (it != m_components.end())
 		{
 			m_components.erase(it);
+		}
+		// Update cache's
+		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+		{
+			//std::bitset<100>(it->first);
+			std::bitset<100> components(it->first);
+			// If the components was valid for the cache but the new one is not, remove it
+			if ((last_flags & components) == components && (m_component_flags & components) != components)
+			{
+				// Search for the entity
+				auto& search = std::find(it->second.begin(), it->second.end(), this);
+				// If the item was found, remove the entity
+				if (search != it->second.end())
+				{
+					it->second.erase(search);
+				}
+			}
 		}
 	}
 
@@ -100,13 +133,6 @@ namespace enteez
 		{
 			if (m_component_flags.test(base))
 			{
-
-
-
-
-				//ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[base]);
-
-				//f(this, &wrapper->Get());
 
 				TemplateBase* tb = m_entity_manager->GetTemplateBase<T>();
 
