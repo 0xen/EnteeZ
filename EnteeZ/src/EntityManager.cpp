@@ -44,3 +44,8 @@ void enteez::EntityManager::DestroyEntity(Entity * entity)
 	}
 	delete entity;
 }
+
+std::vector<Entity*> enteez::EntityManager::GetEntitys()
+{
+	return m_entitys;
+}

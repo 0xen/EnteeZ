@@ -21,7 +21,7 @@ namespace enteez
 
 
 		template <typename T, typename ... Args>
-		ComponentWrapper<T>* AddComponent(Args&& ... args);
+		T* AddComponent(Args&& ... args);
 
 		template <typename T>
 		T& GetComponent();
@@ -49,7 +49,7 @@ namespace enteez
 	};
 
 	template<typename T, typename ...Args>
-	inline ComponentWrapper<T>* Entity::AddComponent(Args && ...args)
+	inline T* Entity::AddComponent(Args && ...args)
 	{
 		T* t = new T(std::forward<Args>(args) ...);
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
@@ -71,7 +71,7 @@ namespace enteez
 				}
 			}
 		}
-		return wrapper;
+		return t;
 	}
 
 	template<typename T>

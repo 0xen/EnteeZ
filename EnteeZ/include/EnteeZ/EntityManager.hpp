@@ -25,6 +25,8 @@ namespace enteez
 		template<typename ...components>
 		std::vector<Entity*> GetEntitysWith();
 
+		std::vector<Entity*> GetEntitys();
+
 		template<typename T>
 		unsigned int GetComponentIndex();
 
