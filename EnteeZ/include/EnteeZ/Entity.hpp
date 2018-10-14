@@ -19,6 +19,8 @@ namespace enteez
 		Entity(EntityManager* entity_manager);
 		~Entity();
 
+		template <typename T>
+		T* AddComponent(T* component);
 
 		template <typename T, typename ... Args>
 		T* AddComponent(Args&& ... args);
@@ -47,6 +49,31 @@ namespace enteez
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
 		EntityManager* m_entity_manager;
 	};
+
+	template <typename T>
+	inline T* Entity::AddComponent(T* component)
+	{
+		unsigned int index = m_entity_manager->GetComponentIndex<T>();
+		m_component_flags.set(index);
+
+		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component, false);
+		m_components[index] = wrapper;
+
+		// Update cache's
+		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+		{
+			//std::bitset<100>(it->first);
+			std::bitset<100> components(it->first);
+			if ((m_component_flags & components) == components)
+			{
+				if (std::find(it->second.begin(), it->second.end(), this) == it->second.end())
+				{
+					it->second.push_back(this);
+				}
+			}
+		}
+		return component;
+	}
 
 	template<typename T, typename ...Args>
 	inline T* Entity::AddComponent(Args && ...args)

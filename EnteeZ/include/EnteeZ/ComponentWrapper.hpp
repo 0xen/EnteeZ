@@ -12,17 +12,24 @@ namespace enteez
 	class ComponentWrapper : public BaseComponentWrapper
 	{
 	public:
-		ComponentWrapper() {}
-		ComponentWrapper(T* component);
-
+		ComponentWrapper() : m_origional(true){}
+		ComponentWrapper(T* component, bool origional = true);
+		~ComponentWrapper();
 		T& Get();
 
 	private:
+		bool m_origional;
 	};
+
 	template<typename T>
-	inline ComponentWrapper<T>::ComponentWrapper(T* component)
+	inline ComponentWrapper<T>::ComponentWrapper(T* component, bool origional) : m_origional(origional)
 	{
 		m_component = component;
+	}
+	template<typename T>
+	inline ComponentWrapper<T>::~ComponentWrapper()
+	{
+		if (m_origional) delete m_component;
 	}
 	template<typename T>
 	inline T& ComponentWrapper<T>::Get()

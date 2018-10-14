@@ -85,6 +85,13 @@ int main(int argc, char **argv)
 
 	enteez::EntityManager& em = ez.GetEntityManager();
 
+	Position* position = new Position(1.0f,2.0f);
+
+	enteez::Entity* entity = em.CreateEntity();
+	entity->AddComponent(position);
+	std::cout << entity->HasComponent<Position>() << std::endl;
+
+
 
 	em.ForEach<ComponentA>([](enteez::Entity* entity, ComponentA& caomponent_a)
 	{
