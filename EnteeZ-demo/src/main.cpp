@@ -46,15 +46,11 @@ private:
 	enteez::Entity* m_entity;
 };
 
-class ComponentA : public MsgRecive<int>, public MsgSend
+class ComponentA : public MsgSend
 {
 public:
 	ComponentA() {}
 	ComponentA(enteez::Entity* entity) : MsgSend(entity){}
-	virtual void ReciveMessage(enteez::Entity* sender, int message)
-	{
-		std::cout << "A Wahoo " << message << std::endl;
-	}
 	void Update()
 	{
 		Send(123);
@@ -63,11 +59,10 @@ private:
 
 };
 
-class ComponentB : public MsgRecive<int>, public MsgSend
+class ComponentB : public MsgRecive<int>
 {
 public:
 	ComponentB() {}
-	ComponentB(enteez::Entity* entity) : MsgSend(entity) {}
 	virtual void ReciveMessage(enteez::Entity* sender, int message)
 	{
 		std::cout << "B Wahoo " << message << std::endl;
@@ -76,14 +71,32 @@ private:
 
 };
 
+struct A
+{
+	~A()
+	{
+		std::cout << "Called" << std::endl;
+	}
+};
+
+
 int main(int argc, char **argv)
 {
 
 	enteez::EnteeZ ez;
-	ez.RegisterBase<ComponentA, MsgSend, MsgRecive<int>>();
-	ez.RegisterBase<ComponentB, MsgSend, MsgRecive<int>>();
 
 	enteez::EntityManager& em = ez.GetEntityManager();
+
+
+	enteez::Entity* entity1 = em.CreateEntity();
+	entity1->AddComponent<A>();
+	entity1->RemoveComponent<A>();
+
+
+
+	ez.RegisterBase<ComponentA, MsgSend>();
+	ez.RegisterBase<ComponentB, MsgRecive<int>>();
+
 
 	Position* position = new Position(1.0f,2.0f);
 
@@ -103,9 +116,9 @@ int main(int argc, char **argv)
 	{
 		enteez::Entity* entity = em.CreateEntity();
 		entity->AddComponent<Position>(1.2f, 1.3f);
-		entity->AddComponent<ComponentA>(entity);
-		entity->AddComponent<ComponentB>(entity);
-
+		ComponentA* compa = entity->AddComponent<ComponentA>(entity);
+		entity->AddComponent<ComponentB>();
+		compa->Update();
 		entity->RemoveComponent<ComponentA>();
 	}
 

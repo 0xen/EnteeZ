@@ -118,6 +118,8 @@ namespace enteez
 		auto it = m_components.find(type_index);
 		if (it != m_components.end())
 		{
+			ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(it->second);
+			delete wrapper;
 			m_components.erase(it);
 		}
 		// Update cache's

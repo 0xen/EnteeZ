@@ -29,7 +29,8 @@ namespace enteez
 	template<typename T>
 	inline ComponentWrapper<T>::~ComponentWrapper()
 	{
-		if (m_origional) delete m_component;
+		if (m_origional)
+			delete reinterpret_cast<T*>(m_component);
 	}
 	template<typename T>
 	inline T& ComponentWrapper<T>::Get()
