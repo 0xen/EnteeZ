@@ -19,6 +19,8 @@ namespace enteez
 
 		void DestroyEntity(Entity* entity);
 
+		void Clear();
+
 		template<typename ...components>
 		void ForEach(typename lambda_function<std::function<void(Entity* entity, components&...)>>::definition f, bool cache = false);
 
