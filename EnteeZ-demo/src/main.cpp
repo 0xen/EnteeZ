@@ -79,7 +79,6 @@ struct A
 	}
 };
 
-
 int main(int argc, char **argv)
 {
 
@@ -116,9 +115,9 @@ int main(int argc, char **argv)
 	{
 		enteez::Entity* entity = em.CreateEntity();
 		entity->AddComponent<Position>(1.2f, 1.3f);
-		ComponentA* compa = entity->AddComponent<ComponentA>(entity);
+		ComponentA& compa = entity->AddComponent<ComponentA>(entity)->Get();
 		entity->AddComponent<ComponentB>();
-		compa->Update();
+		compa.Update();
 		entity->RemoveComponent<ComponentA>();
 	}
 

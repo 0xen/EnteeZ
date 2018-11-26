@@ -13,7 +13,7 @@ namespace enteez
 	{
 	public:
 		ComponentWrapper() : m_origional(true){}
-		ComponentWrapper(T* component, bool origional = true);
+		ComponentWrapper(T* component,unsigned int size , bool origional = true);
 		~ComponentWrapper();
 		T& Get();
 
@@ -22,8 +22,9 @@ namespace enteez
 	};
 
 	template<typename T>
-	inline ComponentWrapper<T>::ComponentWrapper(T* component, bool origional) : m_origional(origional)
+	inline ComponentWrapper<T>::ComponentWrapper(T* component, unsigned int size, bool origional) : m_origional(origional)
 	{
+		m_size = size;
 		m_component = component;
 	}
 	template<typename T>

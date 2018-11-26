@@ -15,7 +15,7 @@ namespace enteez
 	public:
 		EntityManager(EnteeZ* enteez);
 		~EntityManager();
-		EntityManager::Entity* CreateEntity();
+		EntityManager::Entity* CreateEntity(std::string name = "Object");
 
 		void DestroyEntity(Entity* entity);
 

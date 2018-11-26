@@ -16,14 +16,16 @@ namespace enteez
 	class Entity
 	{
 	public:
-		Entity(EntityManager* entity_manager);
+		Entity(EntityManager* entity_manager, std::string name);
 		~Entity();
 
 		template <typename T>
-		T* AddComponent(T* component);
+		ComponentWrapper<T>* AddComponent(T* component);
 
 		template <typename T, typename ... Args>
-		T* AddComponent(Args&& ... args);
+		ComponentWrapper<T>* AddComponent(Args&& ... args);
+
+
 
 		template <typename T>
 		T& GetComponent();
@@ -40,23 +42,28 @@ namespace enteez
 		template<typename T>
 		void ForEach(typename lambda_function<std::function<void(Entity* entity, T& t)>>::definition f);
 
+		void ForEach(typename lambda_function<std::function<void(BaseComponentWrapper& wrapper)>>::definition f);
+
 		EntityManager& GetManager();
 
 		void Destroy();
 
+		std::string GetName();
+
 	private:
+		std::string m_name;
 		std::bitset<100> m_component_flags;
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
 		EntityManager* m_entity_manager;
 	};
 
 	template <typename T>
-	inline T* Entity::AddComponent(T* component)
+	inline ComponentWrapper<T>* Entity::AddComponent(T* component)
 	{
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
 		m_component_flags.set(index);
 
-		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component, false);
+		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component,sizeof(T), false);
 		m_components[index] = wrapper;
 
 		// Update cache's
@@ -72,17 +79,17 @@ namespace enteez
 				}
 			}
 		}
-		return component;
+		return wrapper;
 	}
 
 	template<typename T, typename ...Args>
-	inline T* Entity::AddComponent(Args && ...args)
+	inline ComponentWrapper<T>* Entity::AddComponent(Args && ...args)
 	{
 		T* t = new T(std::forward<Args>(args) ...);
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
 		m_component_flags.set(index);
 
-		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t);
+		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t, sizeof(T));
 		m_components[index] = wrapper;
 
 		// Update cache's
@@ -98,7 +105,7 @@ namespace enteez
 				}
 			}
 		}
-		return t;
+		return wrapper;
 	}
 
 	template<typename T>
@@ -170,6 +177,14 @@ namespace enteez
 
 				f(this, t);
 			}
+		}
+	}
+
+	inline void Entity::ForEach(typename lambda_function<std::function<void(BaseComponentWrapper& wrapper)>>::definition f)
+	{
+		for (auto it = m_components.begin(); it != m_components.end(); it++)
+		{
+			f(*it->second);
 		}
 	}
 }

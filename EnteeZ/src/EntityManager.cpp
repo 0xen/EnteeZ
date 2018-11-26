@@ -17,9 +17,9 @@ enteez::EntityManager::~EntityManager()
 }
 
 
-Entity* EntityManager::CreateEntity()
+Entity* EntityManager::CreateEntity(std::string name)
 {
-	Entity* entity = new Entity(this);
+	Entity* entity = new Entity(this, name);
 	m_entitys.push_back(entity);
 	return entity;
 }

@@ -3,7 +3,7 @@
 
 using namespace enteez;
 
-Entity::Entity(EntityManager* entity_manager)
+Entity::Entity(EntityManager* entity_manager, std::string name) : m_name(name)
 {
 	m_entity_manager = entity_manager;
 }
@@ -25,4 +25,9 @@ EntityManager & enteez::Entity::GetManager()
 void enteez::Entity::Destroy()
 {
 	m_entity_manager->DestroyEntity(this);
+}
+
+std::string enteez::Entity::GetName()
+{
+	return m_name;
 }
