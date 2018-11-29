@@ -33,6 +33,8 @@ namespace enteez
 		template <typename T>
 		void RemoveComponent();
 
+		void RemoveComponent(void* ptr);
+
 		template <typename T>
 		bool HasComponent();
 
@@ -51,6 +53,9 @@ namespace enteez
 		std::string GetName();
 
 	private:
+
+		void RemoveComponent(unsigned int type_index);
+
 		std::string m_name;
 		std::bitset<100> m_component_flags;
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
@@ -63,7 +68,7 @@ namespace enteez
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
 		m_component_flags.set(index);
 
-		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component,sizeof(T), false);
+		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component,sizeof(T), index, false);
 		m_components[index] = wrapper;
 
 		// Update cache's
@@ -89,7 +94,7 @@ namespace enteez
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
 		m_component_flags.set(index);
 
-		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t, sizeof(T));
+		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t, sizeof(T), index);
 		m_components[index] = wrapper;
 
 		// Update cache's
@@ -119,33 +124,8 @@ namespace enteez
 	template<typename T>
 	inline void Entity::RemoveComponent()
 	{
-		std::bitset<100> last_flags = m_component_flags;
 		unsigned int type_index = m_entity_manager->GetComponentIndex<T>();
-		m_component_flags.set(type_index, false);
-		auto it = m_components.find(type_index);
-		if (it != m_components.end())
-		{
-			ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(it->second);
-			delete wrapper;
-			m_components.erase(it);
-		}
-		// Update cache's
-		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
-		{
-			//std::bitset<100>(it->first);
-			std::bitset<100> components(it->first);
-			// If the components was valid for the cache but the new one is not, remove it
-			if ((last_flags & components) == components && (m_component_flags & components) != components)
-			{
-				// Search for the entity
-				auto& search = std::find(it->second.begin(), it->second.end(), this);
-				// If the item was found, remove the entity
-				if (search != it->second.end())
-				{
-					it->second.erase(search);
-				}
-			}
-		}
+		RemoveComponent(type_index);
 	}
 
 	template<typename T>
@@ -176,6 +156,19 @@ namespace enteez
 				T& t = ts.Get(m_components[base]->GetComponentPtr());
 
 				f(this, t);
+			}
+		}
+	}
+
+	inline void Entity::RemoveComponent(void * ptr)
+	{
+		for (auto it = m_components.begin(); it != m_components.end(); it++)
+		{
+			if (it->second->GetComponentPtr() == ptr)
+			{
+				unsigned int type_index = it->second->GetID();
+				RemoveComponent(type_index);
+				return;
 			}
 		}
 	}

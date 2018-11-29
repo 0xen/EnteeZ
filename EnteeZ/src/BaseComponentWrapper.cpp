@@ -21,3 +21,8 @@ void enteez::BaseComponentWrapper::SetName(std::string name)
 {
 	m_name = name;
 }
+
+unsigned int enteez::BaseComponentWrapper::GetID()
+{
+	return m_id;
+}

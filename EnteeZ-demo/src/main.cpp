@@ -88,10 +88,10 @@ int main(int argc, char **argv)
 
 
 	enteez::Entity* entity1 = em.CreateEntity();
-	entity1->AddComponent<A>();
-	entity1->RemoveComponent<A>();
+	enteez::ComponentWrapper<A>* comp = entity1->AddComponent<A>();
+	entity1->RemoveComponent(comp->GetComponentPtr());
 
-
+	exit(0);
 
 	ez.RegisterBase<ComponentA, MsgSend>();
 	ez.RegisterBase<ComponentB, MsgRecive<int>>();
