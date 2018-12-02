@@ -8,6 +8,6 @@ namespace enteez
 	class TemplateStorage : public TemplateBase
 	{
 	public:
-		virtual T& Get(void* data) = 0;
+		virtual T* Get(void* data) = 0;
 	};
 }

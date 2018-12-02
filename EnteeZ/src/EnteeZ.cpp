@@ -9,9 +9,12 @@ EnteeZ::EnteeZ() : m_entity_manager(this)
 
 enteez::EnteeZ::~EnteeZ()
 {
-	for (auto it = m_component_base_templates.begin(); it != m_component_base_templates.end(); it++)
+	for (auto it1 = m_component_base_templates.begin(); it1 != m_component_base_templates.end(); it1++)
 	{
-		delete it->second;
+		for (auto it2 = it1->second.begin(); it2 != it1->second.end(); it2++)
+		{
+			delete it2->second;
+		}
 	}
 }
 

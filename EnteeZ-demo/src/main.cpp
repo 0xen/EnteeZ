@@ -59,10 +59,11 @@ private:
 
 };
 
-class ComponentB : public MsgRecive<int>
+class ComponentB : public MsgSend, public MsgRecive<int>
 {
 public:
-	ComponentB() {}
+	ComponentB() : MsgSend() {}
+	ComponentB(enteez::Entity* entity) : MsgSend(entity) {}
 	virtual void ReciveMessage(enteez::Entity* sender, int message)
 	{
 		std::cout << "B Wahoo " << message << std::endl;
@@ -91,11 +92,19 @@ int main(int argc, char **argv)
 	enteez::ComponentWrapper<A>* comp = entity1->AddComponent<A>();
 	entity1->RemoveComponent(comp->GetComponentPtr());
 
-	exit(0);
-
 	ez.RegisterBase<ComponentA, MsgSend>();
-	ez.RegisterBase<ComponentB, MsgRecive<int>>();
+	ez.RegisterBase<ComponentB, MsgSend, MsgRecive<int>>();
 
+	enteez::Entity* entity2 = em.CreateEntity();
+	entity2->AddComponent<ComponentA>(entity2);
+	entity2->AddComponent<ComponentB>(entity2);
+
+
+
+	entity2->ForEach<MsgSend>([](enteez::Entity* entity, MsgSend& send)
+	{
+
+	});
 
 	Position* position = new Position(1.0f,2.0f);
 

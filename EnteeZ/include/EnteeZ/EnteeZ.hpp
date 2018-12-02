@@ -30,7 +30,7 @@ namespace enteez
 		std::map<std::type_index, unsigned int> m_component_indexs;
 
 		std::map<unsigned int, std::vector<unsigned int>> m_component_bases;
-		std::map<unsigned int, TemplateBase*> m_component_base_templates;
+		std::map<unsigned int, std::map<unsigned int, TemplateBase*>> m_component_base_templates;
 
 		EntityManager m_entity_manager;
 	};
@@ -40,7 +40,7 @@ namespace enteez
 	{
 		unsigned int component_index = GetIndex<T>(m_component_indexs);
 		unsigned int base_index = GetIndex<V>(m_base_indexs);
-		m_component_base_templates[base_index] = new TemplatePair<T, V>();
+		m_component_base_templates[component_index][base_index] = new TemplatePair<T, V>();
 		auto it = std::find(m_component_bases[base_index].begin(), m_component_bases[base_index].end(), component_index);
 		if (it == m_component_bases[base_index].end())
 		{

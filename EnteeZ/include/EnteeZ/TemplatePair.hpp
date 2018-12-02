@@ -8,9 +8,9 @@ namespace enteez
 	class TemplatePair : public TemplateStorage<T>
 	{
 	public:
-		virtual T& Get(void* data)
+		virtual T* Get(void* data)
 		{
-			return *static_cast<V*>(data);
+			return dynamic_cast<T*>(static_cast<V*>(data));
 		}
 	};
 }

@@ -12,10 +12,15 @@ namespace enteez
 	class ComponentWrapper : public BaseComponentWrapper
 	{
 	public:
-		ComponentWrapper() : m_origional(true){}
+		ComponentWrapper() : m_origional(true)
+		{
+			m_component = nullptr;
+		}
 		ComponentWrapper(T* component,unsigned int size, unsigned int id, bool origional = true);
 		virtual ~ComponentWrapper();
+		virtual void* GetComponentPtr();
 		T& Get();
+		T* m_component;
 
 	private:
 		bool m_origional;
@@ -34,8 +39,13 @@ namespace enteez
 			delete reinterpret_cast<T*>(m_component);
 	}
 	template<typename T>
+	inline void * ComponentWrapper<T>::GetComponentPtr()
+	{
+		return m_component;
+	}
+	template<typename T>
 	inline T& ComponentWrapper<T>::Get()
 	{
-		return *static_cast<T*>(m_component);
+		return *m_component;// static_cast<T*>(m_component);
 	}
 }

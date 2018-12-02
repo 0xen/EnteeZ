@@ -39,8 +39,11 @@ namespace enteez
 		template<typename T>
 		std::vector<unsigned int> GetBaseComponents();
 
-		template<typename T>
+		template<typename T, typename V>
 		TemplateBase* GetTemplateBase();
+
+		template<typename V>
+		TemplateBase* GetTemplateBase(unsigned int component_index);
 
 		friend class Entity;
 	private:
@@ -133,11 +136,19 @@ namespace enteez
 		return m_enteez->m_component_bases[base_index];
 	}
 
-	template<typename T>
+	template<typename T, typename V>
 	inline TemplateBase* EntityManager::GetTemplateBase()
 	{
-		unsigned int base_index = GetBaseIndex<T>();
-		return m_enteez->m_component_base_templates[base_index];
+		unsigned int component_index = GetComponentIndex<T>();
+		unsigned int base_index = GetBaseIndex<V>();
+		return m_enteez->m_component_base_templates[component_index][base_index];
+	}
+
+	template<typename V>
+	inline TemplateBase* EntityManager::GetTemplateBase(unsigned int component_index)
+	{
+		unsigned int base_index = GetBaseIndex<V>();
+		return m_enteez->m_component_base_templates[component_index][base_index];
 	}
 
 	template<typename T>

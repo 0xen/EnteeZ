@@ -2,10 +2,6 @@
 
 using namespace enteez;
 
-void * enteez::BaseComponentWrapper::GetComponentPtr()
-{
-	return m_component;
-}
 
 unsigned int enteez::BaseComponentWrapper::GetSize()
 {
