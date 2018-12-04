@@ -53,7 +53,9 @@ namespace enteez
 
 		void Destroy();
 
-		std::string GetName();
+		void SetName(std::string name);
+
+		std::string& GetName();
 
 	private:
 

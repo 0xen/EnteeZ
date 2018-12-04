@@ -27,7 +27,12 @@ void enteez::Entity::Destroy()
 	m_entity_manager->DestroyEntity(this);
 }
 
-std::string enteez::Entity::GetName()
+void enteez::Entity::SetName(std::string name)
+{
+	m_name = name;
+}
+
+std::string& enteez::Entity::GetName()
 {
 	return m_name;
 }
