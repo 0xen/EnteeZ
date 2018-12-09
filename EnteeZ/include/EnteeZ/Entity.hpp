@@ -57,6 +57,8 @@ namespace enteez
 
 		std::string& GetName();
 
+		unsigned int GetComponentCount();
+
 	private:
 
 		void RemoveComponent(unsigned int type_index);
@@ -65,14 +67,15 @@ namespace enteez
 		std::bitset<100> m_component_flags;
 		std::map<unsigned int, BaseComponentWrapper*> m_components;
 		EntityManager* m_entity_manager;
+		unsigned int m_component_count;
 	};
 
 	template <typename T>
 	inline ComponentWrapper<T>* Entity::AddComponent(T* component)
 	{
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
+		if (!m_component_flags.test(index)) m_component_count++;
 		m_component_flags.set(index);
-
 		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component,sizeof(T), index, false);
 		m_components[index] = wrapper;
 
@@ -97,6 +100,7 @@ namespace enteez
 	{
 		T* t = new T(std::forward<Args>(args) ...);
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
+		if (!m_component_flags.test(index)) m_component_count++;
 		m_component_flags.set(index);
 
 		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t, sizeof(T), index);
@@ -150,8 +154,6 @@ namespace enteez
 	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, T& t)>>::definition f)
 	{
 		std::vector<unsigned int> component_bases = m_entity_manager->GetBaseComponents<T>();
-		//TemplateBase* tb = m_entity_manager->GetTemplateBase<T>();
-		//TemplateStorage<T>& ts = static_cast<TemplateStorage<T>&>(*tb);
 		for (auto base : component_bases)
 		{
 			if (m_component_flags.test(base))

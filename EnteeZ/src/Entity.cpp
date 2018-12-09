@@ -6,6 +6,7 @@ using namespace enteez;
 Entity::Entity(EntityManager* entity_manager, std::string name) : m_name(name)
 {
 	m_entity_manager = entity_manager;
+	m_component_count = 0;
 }
 
 enteez::Entity::~Entity()
@@ -37,9 +38,15 @@ std::string& enteez::Entity::GetName()
 	return m_name;
 }
 
+unsigned int enteez::Entity::GetComponentCount()
+{
+	return m_component_count;
+}
+
 void enteez::Entity::RemoveComponent(unsigned int type_index)
 {
 	std::bitset<100> last_flags = m_component_flags;
+	if (m_component_flags.test(type_index)) m_component_count--;
 	m_component_flags.set(type_index, false);
 	auto it = m_components.find(type_index);
 	if (it != m_components.end())
