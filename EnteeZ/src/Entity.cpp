@@ -11,11 +11,10 @@ Entity::Entity(EntityManager* entity_manager, std::string name) : m_name(name)
 
 enteez::Entity::~Entity()
 {
-	for (auto it = m_components.begin(); it != m_components.end(); it++)
+	while (m_components.size() > 0)
 	{
-		delete it->second;
+		RemoveComponent(m_components.begin()->first);
 	}
-	m_components.clear();
 }
 
 EntityManager & enteez::Entity::GetManager()
