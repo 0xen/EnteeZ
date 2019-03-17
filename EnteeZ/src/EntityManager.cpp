@@ -47,15 +47,25 @@ void enteez::EntityManager::DestroyEntity(Entity * entity)
 
 void enteez::EntityManager::Clear()
 {
-	for (auto it : m_entitys)
+	std::vector<Entity*> temp = m_entitys;
+	m_entitys.clear();
+	m_cache.clear();
+	for (auto it : temp)
 	{
 		delete it;
 	}
-	m_entitys.clear();
-	m_cache.clear();
 }
 
 std::vector<Entity*> enteez::EntityManager::GetEntitys()
 {
 	return m_entitys;
+}
+
+bool enteez::EntityManager::ValidEntity(Entity* entity)
+{
+	for (auto it : m_entitys)
+	{
+		if (it == entity)return true;
+	}
+	return false;
 }

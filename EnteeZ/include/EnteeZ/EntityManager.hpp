@@ -32,6 +32,9 @@ namespace enteez
 		// Get all entitys
 		std::vector<Entity*> GetEntitys();
 
+		// Does the entity exist
+		bool ValidEntity(Entity* entity);
+
 		template<typename T>
 		// Get a components index
 		unsigned int GetComponentIndex();
