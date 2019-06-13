@@ -45,7 +45,7 @@ namespace enteez
 
 		template<typename T>
 		// Get all components with base type T
-		std::vector<unsigned int> GetBaseComponents();
+		std::vector<unsigned int>& GetBaseComponents();
 
 		template<typename T, typename V>
 		// Get a Template base with the component top level and base class instance
@@ -54,6 +54,11 @@ namespace enteez
 		template<typename V>
 		// Get a Template base with a pre found component index and base inheritance type T
 		TemplateBase* GetTemplateBase(unsigned int component_index);
+
+		template<typename T>
+		// See if a component inherits a base class, if so, return true and cast a copy to the user
+		bool BaseClassInstance(BaseComponentWrapper& wrapper, T* t);
+
 		// Allow Entity to access our private members
 		friend class Entity;
 	private:
@@ -150,7 +155,7 @@ namespace enteez
 
 	template<typename T>
 	// Get all components with base type T
-	std::vector<unsigned int> EntityManager::GetBaseComponents()
+	std::vector<unsigned int>& EntityManager::GetBaseComponents()
 	{
 		unsigned int base_index = GetBaseIndex<T>();
 		return m_enteez->m_component_bases[base_index];
@@ -171,6 +176,22 @@ namespace enteez
 	{
 		unsigned int base_index = GetBaseIndex<V>();
 		return m_enteez->m_component_base_templates[component_index][base_index];
+	}
+
+	template<typename T>
+	// See if a component inherits a base class, if so, return true and cast a copy to the user
+	inline bool EntityManager::BaseClassInstance(BaseComponentWrapper & wrapper, T * t)
+	{
+		std::vector<unsigned int>& component_bases = m_entity_manager->GetBaseComponents<T>();
+		std::vector<unsigned int>::iterator it = std::find(component_bases.begin(), component_bases.end(), wrapper.GetID());
+		if (it == component_bases.end())return false;
+
+		// Resolve virtual table and return
+		TemplateBase* tb = GetTemplateBase<T>(wrapper.GetID());
+		TemplateStorage<T>& ts = static_cast<TemplateStorage<T>&>(*tb);
+		t = ts.Get(wrapper.GetComponentPtr());
+
+		return true;
 	}
 
 	template<typename T>

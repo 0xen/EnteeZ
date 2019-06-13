@@ -177,7 +177,7 @@ namespace enteez
 	// Loop through each component that has x base class
 	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, T& t)>>::definition f)
 	{
-		std::vector<unsigned int> component_bases = m_entity_manager->GetBaseComponents<T>();
+		std::vector<unsigned int>& component_bases = m_entity_manager->GetBaseComponents<T>();
 		// Loop through all components that use base class T
 		for (auto base : component_bases)
 		{
@@ -197,7 +197,7 @@ namespace enteez
 	// Loop through each component that has x base class
 	inline void Entity::ForEach(typename lambda_function<std::function<void(Entity* entity, BaseComponentWrapper& wrapper, T* t)>>::definition f)
 	{
-		std::vector<unsigned int> component_bases = m_entity_manager->GetBaseComponents<T>();
+		std::vector<unsigned int>& component_bases = m_entity_manager->GetBaseComponents<T>();
 		// Loop through all components that use base class T
 		for (auto base : component_bases)
 		{
