@@ -57,7 +57,7 @@ namespace enteez
 
 		template<typename T>
 		// See if a component inherits a base class, if so, return true and cast a copy to the user
-		bool BaseClassInstance(BaseComponentWrapper& wrapper, T* t);
+		bool BaseClassInstance(BaseComponentWrapper& wrapper, T*& t);
 
 		// Allow Entity to access our private members
 		friend class Entity;
@@ -180,9 +180,9 @@ namespace enteez
 
 	template<typename T>
 	// See if a component inherits a base class, if so, return true and cast a copy to the user
-	inline bool EntityManager::BaseClassInstance(BaseComponentWrapper & wrapper, T * t)
+	inline bool EntityManager::BaseClassInstance(BaseComponentWrapper & wrapper, T *& t)
 	{
-		std::vector<unsigned int>& component_bases = m_entity_manager->GetBaseComponents<T>();
+		std::vector<unsigned int>& component_bases = GetBaseComponents<T>();
 		std::vector<unsigned int>::iterator it = std::find(component_bases.begin(), component_bases.end(), wrapper.GetID());
 		if (it == component_bases.end())return false;
 

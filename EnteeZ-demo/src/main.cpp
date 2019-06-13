@@ -218,6 +218,26 @@ int main(int argc, char **argv)
 			entity->Destroy();
 		}
 
+
+
+		{
+
+
+			enteez::Entity* entity = em.CreateEntity();
+			enteez::ComponentWrapper<PlayerMovment>* a = entity->AddComponent<PlayerMovment>(entity);
+
+
+			Logic* logic = nullptr;
+			if (em.BaseClassInstance(*a, logic))
+			{
+
+			}
+
+
+		}
+
+
+
 	}
 	
 	// End of memory leak checking
