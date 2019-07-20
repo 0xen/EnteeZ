@@ -6,6 +6,10 @@ Components are any valid C++ object, such as a struct or class, or even a C++ pr
 
 This library gives the ability for quick entity lookups based on what components they have and can cache the results for faster retrieval later on.
 
+## Building [CMake]
+
+To build the project, make sure you have the latest version of CMake installed and run the "build_cmake_vs.bat" or the shell code within to generate a build/ directory. Inside will be the projects visual studio instance (If you are on windows).
+
 ## Example Usage
 
 ### Creating an instance of Enteez
