@@ -14,11 +14,6 @@ namespace enteez
 	class ComponentWrapper : public BaseComponentWrapper
 	{
 	public:
-		// Create a default instance of the component
-		ComponentWrapper() : m_origional(true)
-		{
-			m_component = nullptr;
-		}
 		// Create a instance of the componet wrapper passing all required knowlage about the component
 		ComponentWrapper(T* component,unsigned int size, unsigned int id, bool origional = true);
 		// Override the base deconstructor
