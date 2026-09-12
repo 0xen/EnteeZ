@@ -113,9 +113,13 @@ namespace enteez
 			// We found a cache match
 			if (it != m_cache.end())
 			{
+				// Iterate over a snapshot so the lambda may safely destroy entitys (which mutates the live cache)
+				std::vector<Entity*> snapshot = it->second;
 				// Loop through and return all needed data for the request from the cache
-				for (auto entity : it->second)
+				for (auto entity : snapshot)
 				{
+					// Skip entitys that were destroyed by an earlier callback this loop
+					if (!ValidEntity(entity)) continue;
 					f(entity, entity->GetComponent<components>()...);
 				}
 				return;
@@ -123,22 +127,30 @@ namespace enteez
 			// Init the cache
 			m_cache[key] = std::vector<Entity*>();
 
-			// Since we do not have a cache available for this search, we need to loop through all entity's and create a cache
-			for (auto entity : m_entitys)
+			// Since we do not have a cache available for this search, we need to loop through all entity's and create a cache.
+			// Iterate over a snapshot so the lambda may safely create or destroy entitys
+			std::vector<Entity*> snapshot = m_entitys;
+			for (auto entity : snapshot)
 			{
+				// Skip entitys that were destroyed by an earlier callback this loop
+				if (!ValidEntity(entity)) continue;
 				// If we find a entity that matches the criteria add it to the cache and call its function
 				if (entity->HasComponent<components...>())
 				{
-					f(entity, entity->GetComponent<components>()...);
 					m_cache[key].push_back(entity);
+					f(entity, entity->GetComponent<components>()...);
 				}
 			}
 		}
 		else
 		{
+			// Iterate over a snapshot so the lambda may safely create or destroy entitys
+			std::vector<Entity*> snapshot = m_entitys;
 			// Look through all entity's available
-			for (auto entity : m_entitys)
+			for (auto entity : snapshot)
 			{
+				// Skip entitys that were destroyed by an earlier callback this loop
+				if (!ValidEntity(entity)) continue;
 				// If we find a entity that matches the criteria call its function
 				if (entity->HasComponent<components...>())
 					f(entity, entity->GetComponent<components>()...);
