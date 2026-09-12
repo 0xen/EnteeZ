@@ -76,8 +76,9 @@ namespace enteez
 		EnteeZ * m_enteez;
 		// List of all entitys currently alive
 		std::vector<Entity*> m_entitys;
-		// Local cache storage of what entitys match what component combinations
-		std::map<unsigned long long, std::vector<Entity*>> m_cache;
+		// Local cache storage of what entitys match what component combinations.
+		// Keyed by the bitset's string form as bitset::to_ullong() throws once component indexs pass 64
+		std::map<std::string, std::vector<Entity*>> m_cache;
 	};
 
 	template<typename T>
@@ -105,8 +106,10 @@ namespace enteez
 			std::bitset<100> bs;
 			// Add the flags top the handler
 			AddToBitHandler<components...>(bs);
+			// Keyed by string as to_ullong() throws once component indexs pass 64
+			std::string key = bs.to_string();
 
-			auto it = m_cache.find(bs.to_ullong());
+			auto it = m_cache.find(key);
 			// We found a cache match
 			if (it != m_cache.end())
 			{
@@ -118,7 +121,7 @@ namespace enteez
 				return;
 			}
 			// Init the cache
-			m_cache[bs.to_ullong()] = std::vector<Entity*>();
+			m_cache[key] = std::vector<Entity*>();
 
 			// Since we do not have a cache available for this search, we need to loop through all entity's and create a cache
 			for (auto entity : m_entitys)
@@ -127,7 +130,7 @@ namespace enteez
 				if (entity->HasComponent<components...>())
 				{
 					f(entity, entity->GetComponent<components>()...);
-					m_cache[bs.to_ullong()].push_back(entity);
+					m_cache[key].push_back(entity);
 				}
 			}
 		}
