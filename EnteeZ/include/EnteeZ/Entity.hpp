@@ -84,8 +84,9 @@ namespace enteez
 	inline ComponentWrapper<T>* Entity::AddComponent(T* component)
 	{
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
-		// If the bitset dose not contain the component, increment the counter
+		// If the bitset dose not contain the component, increment the counter, otherwise free the old wrapper before replacing it
 		if (!m_component_flags.test(index)) m_component_count++;
+		else delete m_components[index];
 		m_component_flags.set(index);
 		// Generate a new wrapper for the component
 		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(component,sizeof(T), index, false);
@@ -114,8 +115,9 @@ namespace enteez
 	{
 		T* t = new T(std::forward<Args>(args) ...);
 		unsigned int index = m_entity_manager->GetComponentIndex<T>();
-		// If the bitset dose not contain the component, increment the counter
+		// If the bitset dose not contain the component, increment the counter, otherwise free the old wrapper before replacing it
 		if (!m_component_flags.test(index)) m_component_count++;
+		else delete m_components[index];
 		m_component_flags.set(index);
 		// Generate a new wrapper for the component
 		ComponentWrapper<T>* wrapper = new ComponentWrapper<T>(t, sizeof(T), index);
