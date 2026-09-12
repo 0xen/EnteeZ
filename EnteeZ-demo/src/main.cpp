@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <crtdbg.h>
 
 struct Position
 {
@@ -20,8 +21,9 @@ private:
 
 };
 
+// Named SendEntityMessage to avoid colliding with the Win32 SendMessage macro
 template<typename T>
-void SendMessage(enteez::Entity* target, enteez::Entity* sender, T data)
+void SendEntityMessage(enteez::Entity* target, enteez::Entity* sender, T data)
 {
 	target->ForEach<MsgRecive<T>>([data](enteez::Entity* entity, MsgRecive<T>& recive)
 	{
@@ -146,7 +148,7 @@ int main(int argc, char **argv)
 			{
 				it->Destroy();
 			}
-			delete entities;
+			delete[] entities;
 		}
 
 		std::cout << std::endl;
@@ -205,7 +207,7 @@ int main(int argc, char **argv)
 			msg.z = 1.0f;
 
 			// Call the user defined function to send messages, with no sender set
-			SendMessage(entity,nullptr, msg);
+			SendEntityMessage(entity,nullptr, msg);
 
 
 			// There is no inbuilt safeguard for when a component dose not exist for effitency, so it is down to the user to make sure entitys exist before accessing
