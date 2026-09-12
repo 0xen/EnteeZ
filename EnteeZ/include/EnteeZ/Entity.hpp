@@ -6,6 +6,8 @@
 #include <vector>
 #include <bitset>
 #include <typeindex>
+#include <string>
+#include <algorithm>
 
 #include <EnteeZ/ComponentWrapper.hpp>
 
@@ -90,7 +92,7 @@ namespace enteez
 		m_components[index] = wrapper;
 
 		// Update cache's
-		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+		for (auto it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
 		{
 			std::bitset<100> components(it->first);
 			// If the entity now matches the cache bitset, continue
@@ -120,7 +122,7 @@ namespace enteez
 		m_components[index] = wrapper;
 
 		// Update cache's
-		for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+		for (auto it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
 		{
 			std::bitset<100> components(it->first);
 			// If the entity now matches the cache bitset, continue

@@ -56,7 +56,7 @@ void enteez::Entity::RemoveComponent(unsigned int type_index)
 		m_components.erase(it);
 	}
 	// Update cache's
-	for (auto& it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
+	for (auto it = m_entity_manager->m_cache.begin(); it != m_entity_manager->m_cache.end(); it++)
 	{
 		//std::bitset<100>(it->first);
 		std::bitset<100> components(it->first);
@@ -64,7 +64,7 @@ void enteez::Entity::RemoveComponent(unsigned int type_index)
 		if ((last_flags & components) == components && (m_component_flags & components) != components)
 		{
 			// Search for the entity
-			auto& search = std::find(it->second.begin(), it->second.end(), this);
+			auto search = std::find(it->second.begin(), it->second.end(), this);
 			// If the item was found, remove the entity
 			if (search != it->second.end())
 			{

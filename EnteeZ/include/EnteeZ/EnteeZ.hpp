@@ -1,9 +1,10 @@
 #pragma once
 #include <EnteeZ/EntityManager.hpp>
-#include <EnteeZ\TemplatePair.hpp>
+#include <EnteeZ/TemplatePair.hpp>
 #include <typeindex>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 namespace enteez
 {

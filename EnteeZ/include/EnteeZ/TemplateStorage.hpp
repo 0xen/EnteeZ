@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EnteeZ\TemplateBase.hpp>
+#include <EnteeZ/TemplateBase.hpp>
 
 namespace enteez
 {

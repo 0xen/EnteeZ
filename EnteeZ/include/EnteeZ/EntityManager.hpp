@@ -6,6 +6,9 @@
 #include <typeindex>
 #include <vector>
 #include <bitset>
+#include <map>
+#include <string>
+#include <algorithm>
 
 namespace enteez
 {
@@ -17,7 +20,7 @@ namespace enteez
 		EntityManager(EnteeZ* enteez);
 		~EntityManager();
 		// Create a new entity with x name
-		virtual EntityManager::Entity* CreateEntity(std::string name = "Object");
+		virtual Entity* CreateEntity(std::string name = "Object");
 		// Destory a entity and remove it
 		void DestroyEntity(Entity* entity);
 		// Remove all entitys

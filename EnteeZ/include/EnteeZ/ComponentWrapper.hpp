@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EnteeZ\BaseComponentWrapper.hpp>
+#include <EnteeZ/BaseComponentWrapper.hpp>
 
 #include <iostream>
 #include <type_traits>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <EnteeZ\TemplateStorage.hpp>
+#include <EnteeZ/TemplateStorage.hpp>
 
 namespace enteez
 {
