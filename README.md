@@ -8,7 +8,23 @@ This library gives the ability for quick entity lookups based on what components
 
 ## Building [CMake]
 
-To build the project, make sure you have the latest version of CMake installed and run the "build_cmake_vs.bat" or the shell code within to generate a build/ directory. Inside will be the projects visual studio instance (If you are on windows).
+To build the project, make sure you have CMake 3.5 or newer installed and run:
+
+```
+cmake -S . -B build
+cmake --build build
+```
+
+On Windows this generates a Visual Studio solution inside the build/ directory. Three targets are built: the EnteeZ static library, the EnteeZ-demo example program and the EnteeZ-tests test suite.
+
+## Running the tests
+
+The EnteeZ-tests target is a small assert-based suite covering the core API (add/get/remove, ownership, query caching, base-class iteration) plus regression tests. Run it directly, or through CTest:
+
+```
+cd build
+ctest -C Debug
+```
 
 ## Example Usage
 
@@ -48,11 +64,30 @@ One thing to note about this object is that it has no default constructor and on
 entity->AddComponent<Position>(1.0f, 2.0f, 3.0f);
 ```
 
+The entity owns components added this way and deletes them when the component is removed or the entity is destroyed. Alternatively, you can hand the entity a pointer to a component you own yourself; in that case the entity will never delete it and you remain responsible for its lifetime.
+
+```
+Position* position = new Position(1.0f, 2.0f, 3.0f);
+entity->AddComponent<Position>(position);
+// ... later, after removing it or destroying the entity ...
+delete position;
+```
+
+Adding a component type the entity already has replaces the old component with the new one (the old one is freed if the entity owned it).
+
 ### Check to see if the entity has a component
 ```
 // Check to see if we have the component
 bool hasComponent = entity->HasComponent<Position>();
+// Or check several at once, the entity must have all of them
+bool hasBoth = entity->HasComponent<Position, Velocity>();
 ```
+
+### Get a component from a entity
+```
+Position& position = entity->GetComponent<Position>();
+```
+For efficiency there is no safety check inside GetComponent; calling it for a component the entity does not have is undefined behaviour, so guard it with HasComponent first.
 
 ### Remove a component from a entity
 ```
@@ -98,6 +133,13 @@ Optionaly, we can define a flag to say that we wish to cache the results or even
 em.ForEach<Position, Rotation>([](enteez::Entity* entity, Position& position, Rotation& rotation) {
    //...
 });
+```
+
+It is safe to destroy entities from inside a ForEach lambda; destroyed entities are skipped for the rest of the loop.
+
+If you just want the matching entities rather than a loop, use
+```
+std::vector<enteez::Entity*> movers = em.GetEntitysWith<Position, Rotation>();
 ```
 
 ### Component looping
@@ -146,4 +188,23 @@ entity->ForEach<Logic>([](enteez::Entity* entity, Logic& logic) {
   logic.Update();
 });
 ```
+
+You can also test a single component wrapper against a registered base directly:
+
+```
+enteez::ComponentWrapper<PlayerMovement>* wrapper = entity->AddComponent<PlayerMovement>(entity);
+
+Logic* logic = nullptr;
+if (em.BaseClassInstance(*wrapper, logic))
+{
+    logic->Update();
+}
+```
+
+## Notes and limits
+
+* A maximum of 100 distinct component types can be used per EnteeZ instance (the size of the internal component bitset).
+* Component type indices are assigned lazily on first use, so they are only stable within a single run; never serialise them.
+* The library is not thread safe; create, query and destroy entities from a single thread.
+* Components are stored per entity on the heap rather than in contiguous per-type arrays, so iteration is pointer chasing rather than cache-linear. This is fine for small and medium scenes but is the first thing to revisit for very large ones.
 
