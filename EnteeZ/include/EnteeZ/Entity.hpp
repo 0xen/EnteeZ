@@ -143,8 +143,10 @@ namespace enteez
 	inline T& Entity::GetComponent()
 	{
 		unsigned int type_index = m_entity_manager->GetComponentIndex<T>();
-		// Get the compnent from the map and cast it to its wrapper type
-		ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components[type_index]);
+		// Get the compnent from the map and cast it to its wrapper type.
+		// Calling this for a component the entity dose not have is undefined behaviour (check HasComponent first),
+		// but we use find rather than operator[] so a bad call cannot insert a null entry into the component map
+		ComponentWrapper<T>* wrapper = reinterpret_cast<ComponentWrapper<T>*>(m_components.find(type_index)->second);
 		// Return a refrence instance back to the origional compoent, but in the corrent type (void* -> T&)
 		return wrapper->Get();
 	}
